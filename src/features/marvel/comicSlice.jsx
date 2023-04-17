@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from "axios";
 import MD5 from "crypto-js/md5"
 import {nanoid} from "nanoid";
+import {store} from "../../app/store";
 
 const API_URL= "https://gateway.marvel.com:443/v1/";
 
@@ -11,6 +12,9 @@ const getHash = (ts, secretKey, publicKey) =>{
 
 const initialState = {
     comics: [],
+    filteredComics: [],
+    favourites: [],
+    filter: '',
     loading: false,
     error: null,
     comicsPerPage: 12,
@@ -58,14 +62,54 @@ export const fetchComics = createAsyncThunk(
 export const comicsSlice = createSlice({
     name: 'comics',
     initialState,
-    comicsPerPage: 12,
-    currentPage: 1,
     reducers: {
         reset: (state) => initialState,
         addFavouriteComic: (state, action) => {
-            // state.favourites = action.payload;
-            localStorage.setItem('favourites', JSON.stringify(action.payload));
+            const comic = action.payload;
+            const existingIndex = state.favourites.findIndex((favourite) => favourite.id === comic.id);
+
+            if (existingIndex === -1) {
+                // comic is not in favourites, add it
+                state.favourites.push(comic);
+            } else {
+                // comic is already in favourites, remove it
+                state.favourites.splice(existingIndex, 1);
+            }
+
         },
+        removeFavouriteComic: (state, action) => {
+            const comic = action.payload;
+            const existingIndex = state.favourites.findIndex((favourite) => favourite.id === comic.id);
+
+            if (existingIndex !== -1) {
+                const newFavourites = [...state.favourites];
+                console.log(newFavourites)
+                newFavourites.splice(existingIndex, 1);
+                return {
+                    ...state,
+                    favourites: newFavourites,
+                };
+            }
+
+            return state;
+        },
+        removeAllFavouriteComics: (state) => {
+            state.favourites = [];
+            localStorage.setItem('favourites', '[]');
+            state.liked = false;
+        },
+        filterComic: (state, action) => {
+            state.filter = action.payload;
+            if (state.filter) {
+                state.filteredComics = state.comics.filter(
+                    (comic) =>
+                        comic.title.toString().toLowerCase().includes(state.filter.toString().toLowerCase())
+                );
+            } else {
+                state.filteredComics = state.comics; // reset the filteredComics to all comics
+            }
+        },
+
         onNavigateNext: (state) => {
             state.currentPage++;
         },

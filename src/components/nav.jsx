@@ -1,34 +1,39 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {fetchComics,} from "../features/marvel/marvelSlice";
+import {comicActions} from "../features/marvel/comicSlice";
 import {useDispatch, useSelector} from "react-redux";
-import {Header, SidebarWrapper} from "./styled/lib";
-import { GrFavorite } from 'react-icons/gr'
+import {
+    ClearButton,
+    Header,
+    InputWrapper, LikeButtonComic,
+    SidebarWrapper,
+    TopDiv,
+    TopSubText,
+    TopText,
+} from "../styled/lib";
 import {AiOutlineHeart, AiFillCloseCircle} from "react-icons/ai";
-import {Link} from "react-router-dom";
+import FavComicCard from "./favComicCard";
 
 function Nav({ setter }) {
     let input = useRef("");
     const dispatch = useDispatch();
-    const { comics, loading, error, message } = useSelector(
+    const { comics, loading, error, favourite } = useSelector(
         (state) => state.comics
     )
     const [showSidebar, setShowSidebar] = useState(false);
     useEffect(() => {
         if (error) {
-            console.log(message)
+            console.log(error)
         }
-
-    }, [comics, loading, error, message, dispatch])
+    }, [comics, loading, error, dispatch])
+    const favourites = useSelector(state => state.comics.favourites);
+    console.log(favourites)
 
     if (loading) {
         return <div>loading..</div>
     }
 
     const onChange = (e) => {
-        setter((prevState) => ({
-            ...prevState,
-            [e.target.name]: e.target.value,
-        }))
+        setter(e.target.value)
     }
     const handleClick = async (e) => {
         e.preventDefault();
@@ -36,59 +41,62 @@ function Nav({ setter }) {
         console.log(value)
         if (value === "") return;
         try {
-            dispatch(fetchComics(value));
+            dispatch(comicActions.filterComic(value));
         } catch (err) {
             return console.log(err);
         }
     }
+    const handleClearClick = () => {
+        setter("");
+    };
 
-    const getFavoriteComicsFromStorage = () => {
-        const favoriteComics = localStorage.getItem('favourites');
-        if (favoriteComics) {
-            console.log(favoriteComics)
-            return JSON.parse(favoriteComics);
-        } else {
-            return [];
-        }
-    }
-
-    const favoriteComics = getFavoriteComicsFromStorage();
 
     return (
 
         <Header>
-
             <div>
                 <SidebarWrapper>
                     {showSidebar ? (
                         <likebutton onClick={() => setShowSidebar(!showSidebar)}> Favourites < AiOutlineHeart /> </likebutton>
-
                     ) : (
                         <likebutton onClick={() => setShowSidebar(!showSidebar)}>Favourites < AiOutlineHeart /> </likebutton>
                     )}
 
-
-                    <div
-                        className={`sidebar ${showSidebar ? "show" : ""}`}
-                    >
+                    <div className={`sidebar ${showSidebar ? "show" : ""}`}>
                         <div>
-                            <topdiv>
-                                <toptext color={`#c12729`}>My Favourite</toptext>
-                                <div>
-                                    <Link>Clear all</Link>
-                                    <likebutton onClick={() => setShowSidebar(!showSidebar)}> < AiFillCloseCircle color={`black`}/> </likebutton>
-                                </div>
-                            </topdiv>
-
-
-
-
+                            <TopDiv>
+                                <TopText>My Favourite</TopText>
+                                <TopSubText>
+                                    <TopSubText onClick={()=>dispatch(comicActions.removeAllFavouriteComics())}>Clear all</TopSubText>
+                                    <LikeButtonComic onClick={() => setShowSidebar(!showSidebar)}>
+                                        < AiFillCloseCircle color={`black`}/>
+                                    </LikeButtonComic>
+                                </TopSubText>
+                            </TopDiv>
+                            {favourites.map((comic) => {
+                                return (
+                                    <FavComicCard
+                                        title={comic.title}
+                                        thumbnail={comic.thumbnail}
+                                        key={comic.id}
+                                        id={comic.id}
+                                    />
+                                    )
+                            })}
                         </div>
                     </div>
                 </SidebarWrapper>
                     <img src="/marvel_logo.png" alt=""/>
                 <form onSubmit={handleClick}>
-                    <input type="text" ref={input} onChange={onChange} />
+                    <InputWrapper>
+                        <input type="text" ref={input} onChange={onChange} />
+                        {setter && (
+                            <ClearButton onClick={handleClearClick}>
+                                <span aria-hidden="true">&times;</span>
+                            </ClearButton>
+                        )}
+                    </InputWrapper>
+
                 </form>
             </div>
         </Header>

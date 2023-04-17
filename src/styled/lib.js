@@ -49,6 +49,18 @@ export const Header = styled.nav`
   }
 `;
 
+export const InputWrapper = styled.div`
+  position: relative;
+`;
+export const ClearButton = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+`;
 export const MainWrapper = styled.main`
   display: flex;
   flex-direction: column;
@@ -92,6 +104,50 @@ margin: auto;
   @media screen and (min-width: 1536px){}
 `;
 
+
+export const FavComicCardWrapper = styled.div`
+  display: flex;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  position: relative;
+  margin-top: 1em;
+  padding: 0.8em;
+  padding-bottom: 2rem;
+  width: 10rem;
+  height: 7rem;
+  border-bottom: black 2px  solid;
+
+  div{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    height: 100%;
+  }
+  h2 {
+    font-size: 0.7em;
+    color: black;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 0.2em 0.5em;
+    margin-bottom: 0.3em;
+  }
+`;
+
+export const FavComicCardImgWrapper = styled.div`
+  position: relative;
+  padding: 0.8em;
+  width: 5rem !important;
+  min-height: 100%;
+  background-color: blue;
+  background-image: url(${props => props.backgroundImage});
+  background-size: cover;
+  background-position: center center;
+`;
+
+
+
 export const ComicCardWrapper = styled.div`
   position: relative;
   margin-top: 1em;
@@ -103,10 +159,10 @@ export const ComicCardWrapper = styled.div`
   background-size: cover;
   background-position: center center;
   box-shadow: 10px 10px 29px -19px rgba(0,0,0,0.75);
-  
+
   h2 {
     min-width: 100%;
-    font-size: .7em;
+    font-size: 0.7em;
     color: black;
     height: 40px;
     display: flex;
@@ -116,6 +172,7 @@ export const ComicCardWrapper = styled.div`
     padding: 0.2em 0.5em;
     margin-bottom: 0.3em;
   }
+
   a {
     font-size: 1.1em;
     font-weight: bold;
@@ -136,57 +193,90 @@ export const ComicCardWrapper = styled.div`
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.9);
   }
+
   &:hover div {
     display: block;
   }
 
-  eye{
-    min-width: 100%;
-    font-size: 1em;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: start;
-    cursor: pointer;
-  }
   div {
     display: none;
     position: absolute;
     top: 48%;
     left: 47%;
     transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-  }
-  content{
-    display: flex;
-    width: 100%;
-    height: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  likebutton{
-    color: white;
-    font-weight: bold;
-    padding: 5px;
-    right: 0;
-    top: 0;
-    position: absolute;
-    cursor: pointer;
+    min-width: 100%;
+    min-height: 100%;
   }
   position: relative;
-
 `;
+
+
+
+export const DivComic = styled.div`{
+  display: flex;
+  position: absolute;
+  top: 48%;
+  left: 47%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}`
+
+export const EyeComic = styled.button`{
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: normal;
+  color: white;
+  cursor: pointer;
+}`
+export const Content = styled.div`{
+  display: flex !important;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+}`
+export const LikeButtonComic = styled.button`{
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  border: none;
+  background-color: transparent;
+  padding: 10px;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: normal;
+  color: white;
+  cursor: pointer;
+}`
+
+export const LikeButtonFavComic = styled.button`{
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  border: none;
+  background-color: transparent;
+  padding: 10px;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: normal;
+  color: white;
+  cursor: pointer;
+}`
+
 
 export const LikeButton = styled.div`
   position: absolute;
-  right: 0px;
+  right: 0;
   margin-top: 0;
   background-color: transparent;
   font-size: 20px;
   cursor: pointer;
 `;
+
 export const PaginationButtonWrapper = styled.div`
   margin: auto;
   display: flex;
@@ -215,6 +305,7 @@ export const PaginationButtonWrapper = styled.div`
 
 
 export const SidebarWrapper = styled.div`
+ 
   .sidebar {
     top: 0;
     right: 0;
@@ -228,19 +319,15 @@ export const SidebarWrapper = styled.div`
     z-index: 999;
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    
 
-    topdiv{
-      display: flex;
+    div{
       width: 100%;
-      justify-content: space-between;
-      align-content: center;
     }
-    toptext{
-      color: #c12729;
-    }
+   
     &.show {
       transform: translateX(0%);
     }
@@ -272,6 +359,25 @@ export const SidebarWrapper = styled.div`
     }
   }
 `;
+
+export const TopDiv = styled.div`{
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    justify-content: space-between !important;
+  border-bottom: black 2px solid;
+}`
+export const TopText = styled.h1`{
+  color: #c12729;
+  font-weight: bold;
+  font-size: 1rem !important;
+}`
+export const TopSubText = styled.p`{
+  display: flex;
+  font-size: .9rem !important;
+  cursor: pointer;
+}`
+
 //
 // export const ComicCardWrapper = styled.div`
 //   position: relative;
