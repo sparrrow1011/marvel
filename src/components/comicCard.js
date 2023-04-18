@@ -5,25 +5,7 @@ import {useDispatch} from "react-redux";
 import {comicActions} from "../features/marvel/comicSlice";
 import {AiOutlineEye, AiOutlineHeart} from 'react-icons/ai'
 import {Modal} from "./modal";
-import styled from "styled-components";
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-`;
-
-const Button = styled.button`
-  min-width: 100px;
-  padding: 16px 32px;
-  border-radius: 4px;
-  border: none;
-  background: #141414;
-  color: #fff;
-  font-size: 24px;
-  cursor: pointer;
-`;
 const ComicCard = ({
   title, thumbnail, id, object
 }) => {

@@ -16,7 +16,7 @@ import FavComicCard from "./favComicCard";
 function Nav({ setter }) {
     let input = useRef("");
     const dispatch = useDispatch();
-    const { comics, loading, error, favourite } = useSelector(
+    const { comics, loading, error } = useSelector(
         (state) => state.comics
     )
     const [showSidebar, setShowSidebar] = useState(false);
