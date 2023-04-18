@@ -1,6 +1,6 @@
-
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {comicActions} from "../features/marvel/comicSlice";
+import {comicActions, fetchAllComics} from "../features/marvel/comicSlice";
 import {CharacterListWrapper, PaginationButtonWrapper} from "../styled/lib";
 import ComicCard from "./comicCard";
 
@@ -9,8 +9,13 @@ function ComicList(props) {
     const dispatch = useDispatch();
     const comicsPerPage = useSelector((state) => state.comics.comicsPerPage);
     const currentPage = useSelector((state) => state.comics.currentPage);
+    const [isLoading, setIsLoading] = useState(true);
 
-
+    useEffect(() => {
+        dispatch(fetchAllComics())
+            .then(() => setIsLoading(false))
+            .catch(() => setIsLoading(false));
+    }, [dispatch]);
     const totalPages = Math.ceil(comics.length / 12);
 
 
